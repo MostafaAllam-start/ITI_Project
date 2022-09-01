@@ -1,0 +1,128 @@
+{% load blog_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}
+    {% endblock %}</title>
+    <link href="{% static "css/blog.css" %}" rel="stylesheet">
+  
+</head>
+
+<body>
+<div id="header">
+
+    <div class="container">
+        <img src="{% static 'images/logo.png' %}" alt="" class="logo">
+
+        <div class="menuList" id="menu">
+            {% if request.user.is_authenticated %}
+            <ul class="menu">
+                <li {% if section == "dashboard" %}class="selected"{% endif %}>
+                    <a href="{% url "blogapp:post_list" %}">posts</a>
+                </li>
+                <li {% if section == "images" %}class="selected"{% endif %}>
+                    <a href="{% url "blogapp:post_search" %}">search</a>
+                </li>
+                <li {% if section == "people" %}class="selected"{% endif %}>
+                    <a href="{% url "blogapp:create_post" %}">create</a>
+                </li>
+            </ul>
+            {% endif %}
+            <span class="user">
+            {% if request.user.is_authenticated %}
+                Hello {{ request.user.first_name }},
+                <a href="{% url "blogapp:logout" %}">Logout</a>
+            {% else %}
+                <a href="{% url "blogapp:login" %}">Log-in</a>
+            {% endif %}
+            </span>
+            
+        </div>
+        <div class="bars" id="bars">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25" />
+              </svg>
+              
+        </div>
+        <div class="dark" id="dark">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon-stars" viewBox="0 0 16 16">
+                <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278zM4.858 1.311A7.269 7.269 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.316 7.316 0 0 0 5.205-2.162c-.337.042-.68.063-1.029.063-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286z"/>
+                <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
+              </svg>
+        </div>
+    </div>
+</div>
+<section class="section bubble">
+    <div class="header">
+        <div class="container">
+            <div class="left">
+                <h2>Welcome To Our Blog</h2>
+                <p>A blog site featuring articles, tutorials, and projects on Django and related technologies to help you become a better developer.</p>
+               
+            </div>
+            <div class="right">
+                <img src="{% static 'images/person.webp' %}" alt="">
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section blog"> 
+    <div class="container">
+        <div id="content" class="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+         {% if request.user.is_authenticated %}
+        <div id="sidebar" class="sidebar">
+            <h2>MY Blog</h2>
+            <p>I've write <span>{% total_posts %}</span></p>
+            <p>This is my blog.</p>
+            <h3>Latest posts</h3>
+            {% show_latest_posts %}
+            <h3>Most active posts</h3>
+            {% get_most_commented_posts as most_commeted_posts %}
+            <ul>
+                {% for post in most_commeted_posts %}
+        
+                    <li>
+                        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        
+        </div>
+        {% endif %}
+    </div>
+</section>
+<script>
+    bars.addEventListener('click',(e)=>{
+        menu.classList.toggle('active')
+    })
+    dark.addEventListener('click',(e)=>{
+        toggleMode()
+    })
+    window.addEventListener('load',()=>{
+        const mode =  localStorage.getItem('color') || 'white'
+        mode == 'white' ? toggleWhite() : toggleDark();
+     
+    })
+    const toggleMode=()=>
+    {
+        const mode =  localStorage.getItem('color') 
+       mode == 'white' ? toggleDark() : toggleWhite()
+            
+    }
+    function toggleDark()
+    {
+        localStorage.setItem('color','dark')
+        document.body.classList.add('dark')
+    }
+    function toggleWhite()
+    {
+        localStorage.setItem('color','white')
+        document.body.classList.remove('dark')
+    }
+</script>
+</body>
+</html>
