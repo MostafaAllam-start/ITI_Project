@@ -1,15 +1,20 @@
 {% extends 'blogapp/../base.html' %}
 
-
 {% block title %}
     Create
 {% endblock %}
 
 {% block content %}
+  {%if user.is_authenticated and not user.user_profile.restrict %}
     <h1>create post content</h1>
     <form method="post" class="create-form" enctype="multipart/form-data">
       {{ post_form.as_p }}
       {% csrf_token %}
       <p><input type="submit" value="Add post"></p>
     </form>
+  {%else%}
+      <div class="container bg-danger text-light p-3" style="border-radius:3px;">
+          You dont have access to this content.
+      </div>
+  {%endif%}
 {% endblock %}

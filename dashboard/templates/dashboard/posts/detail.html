@@ -1,0 +1,23 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}
+    Post Details
+{% endblock title %}
+
+{% block content %}    
+    <div class="card mb-3">
+        <img src="{{ post.picture.url }}" class="card-img-top" alt="...">
+        <div class="card-body">
+        <p class="card-title">Title: <small class="text-muted"> {{ post.title }}</small></p>
+        <p class="card-text">Content: <small class="text-muted"> {{ post.body }}</small></p>
+        <p class="card-text">Status:<small class="text-muted"> {{post.status}}</small></p>
+        <p class="card-text">Created by:<small class="text-muted"> {{post.author.username}}</small></p>
+        <p class="card-text">Created at:<small class="text-muted"> {{post.created}}</small></p>
+        <p class="card-text">Last update:<small class="text-muted"> {{post.updated}}</small></p>
+        <p class="card-text">Tags:
+            {% for tag in post.tags.all %}
+                <small class="text-muted">{{tag}}</small>
+            {% endfor %}
+        </p>
+        </div>
+    </div>
+{% endblock content %}

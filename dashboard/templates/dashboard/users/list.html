@@ -1,0 +1,45 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}List Users{% endblock title %}
+{%block content %}
+    <a href="{% url 'create_user' %}" class="btn btn-primary my-3">Add User</a>
+    <table class="table">
+        <tr>
+            <th>User Name</th>
+            <th>Full Name</th>
+            <th>email</th>
+            <th>Admin</th>
+            <th>Date Joined</th>
+            <th>Action</th>
+        </tr>
+        {% for useer in users %}
+            <tr class="{% if useer.user_profile.restrict%}bg-danger text-light{% endif %}">
+                <td>{{useer.username}}</td>
+                <td>{{useer.first_name}}{{user.last_name}}</td>
+                <td>{{useer.email}}</td>
+                <td>{{useer.is_superuser}}</td>
+                <td>{{useer.date_joined}}</td>
+                <td>
+                    <div class="dropdown-center">
+                        <button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          :
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'detail_user' useer.id %}"><i class="fa-solid fa-eye text-info"></i></a></li>
+                            <li><a class="dropdown-item" href="{% url 'update_user' useer.id %}"><i class="fa-solid fa-edit text-primary"></i></a></li>
+                            {% if user.id != useer.id %}
+                                <li><a class="dropdown-item" href="{% url 'delete_user' useer.id %}"><i class="fa-solid fa-trash text-danger"></i></a></li>
+                            {% endif %}
+                            {% if not useer.is_superuser %}
+                                {% if useer.user_profile.restrict %}
+                                    <li><a class="dropdown-item" href="{% url 'restrict_user' useer.id %}"><i class="fa-solid fa-user text-primary"></i></a></li>
+                                {% else %}
+                                    <li><a class="dropdown-item" href="{% url 'restrict_user' useer.id %}"><i class="fa-solid fa-user-slash text-danger"></i></a></li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
+                      </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock content%}

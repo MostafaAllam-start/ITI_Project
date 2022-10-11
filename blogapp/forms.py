@@ -3,6 +3,7 @@ from taggit.forms import TagField
 from django import forms
 from django.contrib.auth.models import User
 from .models import Comment,Post,Profile
+from django.contrib.auth.forms import UserChangeForm
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(label= 'Password', widget=forms.PasswordInput)
@@ -31,12 +32,18 @@ class UserEditForm(forms.ModelForm):
         model = User
         fields = ('first_name','last_name','email')
 
-
-
 class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('date_of_birth','photo')
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('date_of_birth', 'restrict', 'description','photo')
+class UserUpdateForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', 'is_superuser', 'is_active')
 
 class EmailPostForm(forms.Form):
     name = forms.CharField(max_length=32)

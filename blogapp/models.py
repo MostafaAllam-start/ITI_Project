@@ -14,8 +14,6 @@ class PublishedManager(models.Manager):
         return super(PublishedManager, self).get_queryset().filter(status='published')
 
 class Post(models.Model):
-    def get_absolute_url(self):
-        return reverse('blogapp:post_detail',args=[self.publish.year,self.publish.month,self.publish.day,self.slug])
     STATUES_CHOICES = (('draft','Draft'),('published','Published'))
     title = models.CharField(max_length=250)
     slug = models.SlugField(max_length=250,unique_for_date='publish')
@@ -27,7 +25,12 @@ class Post(models.Model):
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10,choices=STATUES_CHOICES,default='draft')
     published = PublishedManager()
+    objects = models.Manager() # The default manager.
     tags = TaggableManager()
+
+    def get_absolute_url(self):
+        return reverse('blogapp:post_detail',args=[self.publish.year,self.publish.month,self.publish.day,self.slug])
+
     def save(self,*args,**kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
@@ -62,7 +65,8 @@ class Comment(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="user_profile", on_delete=models.CASCADE)
+    restrict = models.BooleanField(blank=True, null=True, default=False)
     date_of_birth = models.DateField(blank=True,null = True)
     photo = models.ImageField(upload_to='users/%Y/%m/%d/',blank=True)
     description = models.TextField(null=True)

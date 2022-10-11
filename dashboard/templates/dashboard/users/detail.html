@@ -1,0 +1,23 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}
+    User Details
+{% endblock title %}
+
+{% block content %}    
+    <div class="card mb-3">
+        <img src="{{useer.user_profile.photo.url}}" class="card-img-top" alt="...">
+        <div class="card-body">
+            <p class="card-title">User Name: <small class="text-muted"> {{ useer.username }}</small></p>
+            <p class="card-text">Full Name: <small class="text-muted"> {{ useer.first_name }} {{useer.last_name}}</small></p>
+            <p class="card-text">email:<small class="text-muted"> {{useer.email}}</small></p>
+            <p class="card-text">Hashed password:<small class="text-muted"> {{useer.password}}</small></p>
+            <p class="card-text">Last Login:<small class="text-muted"> {{useer.last_login}}</small></p>
+            <p class="card-text">Date Joined:<small class="text-muted"> {{useer.date_joined}}</small></p>
+            <p class="card-text">Date Of Birth:<small class="text-muted"> {{useer.user_profile.date_of_birth}}</small></p>
+            <p class="card-text">Restricted:<small class="text-muted"> {{useer.user_profile.restrict}}</small></p>
+            <p class="card-text">Admin:<small class="text-muted"> {{useer.is_superuser}}</small></p>
+            <p class="card-text">Staff:<small class="text-muted"> {{useer.is_staff}}</small></p>
+            <p class="card-text">Active:<small class="text-muted"> {{useer.is_active}}</small></p>
+        </div>
+    </div>
+{% endblock content %}
